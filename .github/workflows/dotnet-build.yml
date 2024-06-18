@@ -1,41 +1,25 @@
-name: .NET Workflow
+name: github-actions .NET
 
-# This specifies the events that will trigger the workflow
 on:
-  push:
-    branches: 
-      - "main"
-  schedule:
-    # Runs at the start of every hour
-    - cron: '0 * * * *'
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+    schedule:
+        - cron: '0 0 * * 1'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
+        
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                dotnet-version: 8.0.x
+            - name: Restore dependencies
+              run: dotnet restore **/*.csproj
 
-    steps:
-    # Checkout the repository
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    # Setup .NET environment
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-
-    # Restore dependencies
-    - name: Restore dependencies
-      run: dotnet restore **/*.csproj
-
-    # Build the project
-    - name: Build
-      run: dotnet build **/*.csproj --no-restore
-
-    # Custom script to run tests
-    - name: Run tests
-      run: dotnet test **/*.csproj
-
-    # Custom script example
-    - name: Custom script - Print date and time
-      run: echo "Current date and time: $(date)"
+            - name: Build
+              run: dotnet build **/*.csproj --no-restore
