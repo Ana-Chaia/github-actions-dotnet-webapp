@@ -1,0 +1,72 @@
+name: .NET Workflow
+
+on:
+  push:
+    branches: 
+      - "main"
+  schedule:
+    # Runs at the start of every hour
+    - cron: '0 * * * *'
+
+jobs:
+  build-on-push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    # Pre-existing GitHub action to checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Pre-existing GitHub action to setup .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Custom script to restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore **/*.csproj
+
+    # Custom script to build the project
+    - name: Build
+      run: dotnet build **/*.csproj --no-restore
+
+    # Custom script to run tests
+    - name: Run tests
+      run: dotnet test **/*.csproj
+
+    # Custom script to print the current date and time
+    - name: Custom script - Print date and time
+      run: echo "Current date and time: $(date)"
+
+  build-on-schedule:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+    # Pre-existing GitHub action to checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Pre-existing GitHub action to setup .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Custom script to restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore **/*.csproj
+
+    # Custom script to build the project
+    - name: Build
+      run: dotnet build **/*.csproj --no-restore
+
+    # Custom script to run tests
+    - name: Run tests
+      run: dotnet test **/*.csproj
+
+    # Custom script to print the current date and time
+    - name: Custom script - Print date and time
+      run: echo "Current date and time: $(date)"
