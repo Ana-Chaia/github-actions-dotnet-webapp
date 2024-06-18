@@ -1,5 +1,6 @@
 name: .NET Workflow
 
+# This specifies the events that will trigger the workflow
 on:
   push:
     branches: 
@@ -9,26 +10,25 @@ on:
     - cron: '0 * * * *'
 
 jobs:
-  build-on-push:
+  build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
 
     steps:
-    # Pre-existing GitHub action to checkout the repository
+    # Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Pre-existing GitHub action to setup .NET
+    # Setup .NET environment
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
-    # Custom script to restore dependencies
+    # Restore dependencies
     - name: Restore dependencies
       run: dotnet restore **/*.csproj
 
-    # Custom script to build the project
+    # Build the project
     - name: Build
       run: dotnet build **/*.csproj --no-restore
 
@@ -36,37 +36,6 @@ jobs:
     - name: Run tests
       run: dotnet test **/*.csproj
 
-    # Custom script to print the current date and time
-    - name: Custom script - Print date and time
-      run: echo "Current date and time: $(date)"
-
-  build-on-schedule:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
-
-    steps:
-    # Pre-existing GitHub action to checkout the repository
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    # Pre-existing GitHub action to setup .NET
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-
-    # Custom script to restore dependencies
-    - name: Restore dependencies
-      run: dotnet restore **/*.csproj
-
-    # Custom script to build the project
-    - name: Build
-      run: dotnet build **/*.csproj --no-restore
-
-    # Custom script to run tests
-    - name: Run tests
-      run: dotnet test **/*.csproj
-
-    # Custom script to print the current date and time
+    # Custom script example
     - name: Custom script - Print date and time
       run: echo "Current date and time: $(date)"
